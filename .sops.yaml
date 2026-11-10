@@ -18,10 +18,6 @@ creation_rules:
         - *admin_pq
         - *host_ssh_age
 
-  # Supported by Age and Sops, but not yet by sops-nix:
-  # https://github.com/Mic92/sops-nix/issues/695
-  # https://github.com/Mic92/sops-nix/pull/970
-  # Check README.md for more info
   - path_regex: host_ssh.yaml
     key_groups:
       - age:

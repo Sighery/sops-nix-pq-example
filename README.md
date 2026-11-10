@@ -41,27 +41,22 @@ https://getsops.io/docs/usage/identities/age/
 SOPS_AGE_KEY_FILE=credentials/admin_pq sops host_pq.yaml
 ```
 
-## SSH recipients not yet supported by sops-nix
+## SSH recipients
 
-While
-[Age supports SSH recipients][Age SSH recipients],
-and so does [Sops](https://getsops.io/docs/usage/identities/age/), sops-nix
-still does not natively support them, although there are workarounds to get it
-to work. [Issue](https://github.com/Mic92/sops-nix/issues/695) and related
-[PR](https://github.com/Mic92/sops-nix/pull/970).
+[Age supports SSH recipients][Age SSH recipients], and so does
+[Sops][Sops Age SSH recipients]. Very recently,
+[sops-nix started supporting them too][sops-nix SSH recipients PR].
 
-For the `ssh_age` system, the `host_ssh_age` recipient will be used. The
-`host_ssh` recipient will sadly not work as is. To convert from the SSH public
-key to Age:
+The way the previous implementation worked is by deriving an Age key from the
+SSH key. This is what the `ssh_age` system does. To derive the Age recipient
+from an SSH public key:
 
 ```sh
 cat credentials/ssh_ed25519_key.pub | ssh-to-age
 ```
 
-The `ssh` system age uses the classic SSH `host_ssh` recipient. This is not
-natively supported by sops-nix and requires passing an environment variable to
-sops. Check [`secrets-ssh.nix`](./secrets-ssh.nix) for info on how to set this
-up, until the sops-nix PR is merged (if ever).
+The `ssh` system uses the classic SSH `host_ssh` recipient directly, not an
+Age key derived from it.
 
 ## Running VMs of config
 
@@ -75,3 +70,5 @@ nix build .#nixosConfigurations.pq.config.system.build.vm
 
 
 [Age SSH recipients]: https://github.com/FiloSottile/age#ssh-keys
+[Sops Age SSH recipients]: https://getsops.io/docs/usage/identities/age/
+[sops-nix SSH recipients PR]: https://github.com/Mic92/sops-nix/pull/970
